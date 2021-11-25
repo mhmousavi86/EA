@@ -1,1 +1,1 @@
-# EA
+# EA (Expert Advisor)
