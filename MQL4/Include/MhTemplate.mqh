@@ -7,6 +7,7 @@
 #property link      ""
 #property strict
 #include <CSupportResistance.mqh>
+#include <SupportResistanceZones.mqh>
 CSupportResistance* _supportResistanceW1;
 
 CSupportResistance* _supportResistanceD1;
@@ -41,9 +42,9 @@ input int    HeavyMovingShift   =200;
 
 
 
-double    currentProfit; 
+double    currentProfit;
 
-double    previousProfit; 
+double    previousProfit;
 
 
 
@@ -115,7 +116,7 @@ double secondSupport = 0;
 
 
 
-int totalPendingOrders = 0; 
+int totalPendingOrders = 0;
 
 
 
@@ -142,9 +143,9 @@ extern bool        SR_Weekly       = false;
 
 extern bool        ShowAgeLabels   = true;
 
-extern bool        ShowLastTouch   = false; 
+extern bool        ShowLastTouch   = false;
 
-extern bool        ShowAllSRLines  = false; 
+extern bool        ShowAllSRLines  = false;
 
 extern string      __colors__      = "---- S/R settings ----";
 
@@ -166,7 +167,11 @@ color        Colors[]     = {Red,Red, Red,Red};
 
 
 void setMhTemp() {
-CalculateSR(true);
+   initSuportResistanceZones();
+   FastFractals();
+   FindZones();
+   DrawZones();
+   CalculateSR(true);
 long handle=ChartID();
 
    if(handle>0)
@@ -190,7 +195,7 @@ long handle=ChartID();
 
 void CalculateSR(bool forceRefresh = false)
 
-{  
+{
 
    _supportResistanceW1 = new CSupportResistance(Symbol(), PERIOD_W1);
 
@@ -202,7 +207,7 @@ void CalculateSR(bool forceRefresh = false)
 
    string txt="S/R:";
 
-   if (SR_Weekly) 
+   if (SR_Weekly)
 
    {
 
@@ -216,7 +221,7 @@ void CalculateSR(bool forceRefresh = false)
 
    
 
-   if (SR_Daily) 
+   if (SR_Daily)
 
    {
 
