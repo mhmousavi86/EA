@@ -7,7 +7,7 @@
 #property link      "https://www.erwinbeckers.nl"
 #property strict
 
-enum Details 
+enum Details
 {
    Minium,
    MediumLow,
@@ -33,7 +33,7 @@ public:
    datetime StartDate;
    datetime EndDate;
    double   Price;
-   int      Touches;  
+   int      Touches;
    int      Timeframe;
 };
 
@@ -84,7 +84,7 @@ public:
 private:
    //+------------------------------------------------------------------+
    bool DoesSupportLevelExists(double price, double priceRange, double& srLevelFound, bool checkAbove)
-   { 
+   {
       if (_maxLine <= 0) return false;
       
       for (int i=0; i < _maxLine;++i)
@@ -92,7 +92,7 @@ private:
          if (!checkAbove || price >= _lines[i].Price)
          {
             double diff = MathAbs(price - _lines[i].Price);
-            if (diff <= priceRange) 
+            if (diff <= priceRange)
             {
                srLevelFound = _lines[i].Price;
                return true;
@@ -104,7 +104,7 @@ private:
    
    //+------------------------------------------------------------------+
    bool DoesResistanceLevelExists(double price, double priceRange, double& srLevelFound, bool checkBelow)
-   { 
+   {
       if (_maxLine <= 0) return false;
       
       for (int i=0; i < _maxLine;++i)
@@ -112,7 +112,7 @@ private:
          if (!checkBelow || price <= _lines[i].Price)
          {
             double diff = MathAbs(price - _lines[i].Price);
-            if (diff <= priceRange) 
+            if (diff <= priceRange)
             {
                srLevelFound = _lines[i].Price;
                return true;
@@ -127,13 +127,13 @@ private:
    {
       int    cnt        = 0;
       double totalPrice = price;
-      double totalCnt   = 1.0; 
+      double totalCnt   = 1.0;
       double lowest     = price;
-      double highest    = price; 
+      double highest    = price;
       double points       = MarketInfo(_symbol, MODE_POINT);
       
       for (int bar = barPrice + 1; bar < maxBars; bar++)
-      {  
+      {
          ARROW_TYPE arrow = zigZag.GetArrow(bar);
          if (arrow == ARROW_NONE) continue;
          
@@ -153,7 +153,7 @@ private:
             double pips = diffLo / (10.0 * points);
             //if (logEnable) Print("price:",price," bar:",bar, " low:",lo, " date:", startTime, " pips:",pips);
          }
-         else if ( diffHi <= _maxDistance) 
+         else if ( diffHi <= _maxDistance)
          {
             cnt++;
             startTime  = iTime(_symbol, _period, bar);
@@ -183,11 +183,11 @@ private:
       for (int i=0; i < _maxLine;++i)
       {
          double diff = MathAbs(price - _lines[i].Price);
-         if (diff < _maxDistance) 
+         if (diff < _maxDistance)
          {
             if ( mostRecent > _lines[i].EndDate)
             {
-               _lines[i].EndDate = mostRecent;   
+               _lines[i].EndDate = mostRecent;
                _lines[i].EndBar  = bar;
             }
             return true;
@@ -200,7 +200,7 @@ private:
    void Refresh( )
    {
       int barsAvailable = iBars(_symbol, _period);
-      int bars          = MathMin( BarsHistory, barsAvailable); 
+      int bars          = MathMin( BarsHistory, barsAvailable);
       
       int lowestBar       = iLowest(_symbol , _period, MODE_LOW , bars, 0);
       int highestBar      = iHighest(_symbol, _period, MODE_HIGH, bars, 0);
@@ -235,7 +235,7 @@ private:
       }
       _maxDistance =  priceRange/div;
       
-      CZigZag* zigZag      = new CZigZag(bars, _period);  
+      CZigZag* zigZag      = new CZigZag(bars, _period);
       zigZag._extDepth     = 12;
       zigZag._extDeviation = 5;
       zigZag._extBackstep  = 3;
@@ -245,20 +245,20 @@ private:
       for (int bar = 1; bar < bars; bar++)
       {
          ARROW_TYPE arrow = zigZag.GetArrow(bar);
-         if (arrow == ARROW_NONE) continue; 
+         if (arrow == ARROW_NONE) continue;
          if (skipFirstArrow)
          {
             skipFirstArrow = false;
             continue;
          }
          
-         if (arrow == ARROW_BUY) 
-         {  
+         if (arrow == ARROW_BUY)
+         {
             double   price = iLow (_symbol, _period, bar);
             datetime time  = iTime(_symbol, _period, bar);
             datetime startTime = time;
             int startBar = bar;
-            if (!DoesLevelExists(bar, price, startTime )) 
+            if (!DoesLevelExists(bar, price, startTime ))
             {
                int touches = GetTouches(zigZag, bar, bars, price, startTime, startBar);
                if (touches >= 0)
@@ -275,7 +275,7 @@ private:
                }
              }
          }
-         else if (arrow == ARROW_SELL) 
+         else if (arrow == ARROW_SELL)
          {
             double   price     = iHigh(_symbol, _period, bar);
             datetime time      = iTime(_symbol, _period, bar);
@@ -410,7 +410,7 @@ private:
       
       int width = 1;
       double bars = MathAbs(line.EndBar - line.StartBar);
-      if (bars > 0) 
+      if (bars > 0)
       {
          double percentage = bars / ((double)maxBars);
          width =(int)MathAbs(4 * percentage);
@@ -444,7 +444,7 @@ private:
       
       int width = 1;
       double bars = MathAbs(line.EndBar - line.StartBar);
-      if (bars > 0) 
+      if (bars > 0)
       {
          double percentage = bars / ((double)maxBars);
          width =(int)MathAbs(4 * percentage);
@@ -463,7 +463,7 @@ private:
    }
    
     
-public: 
+public:
 
 //+------------------------------------------------------------------+
    double getSecondResistance( string key, color colorText, color &colors[], bool showAgeLabels, bool showLastTouch, bool showAllSRLines)
@@ -474,18 +474,18 @@ public:
       double priceLine = 0;
       // draw lines
       int lineCnt    = 0;
-      int maxTouches = 0;  
-      int maxBars    = 0;  
+      int maxTouches = 0;
+      int maxBars    = 0;
        
       for (int i=0; i < _maxLine;++i)
-      {  
+      {
           maxTouches = MathMax(maxTouches, _lines[i].Touches);
           maxBars    = MathMax(maxBars, MathAbs(_lines[i].EndBar - _lines[i].StartBar));
       }
       
       if (!showAllSRLines)
       {
-         double marketPrice = MarketInfo(_symbol, MODE_BID); 
+         double marketPrice = MarketInfo(_symbol, MODE_BID);
          for (int i=0; i < _maxLine; ++i)
          {
             if ( _lines[i].Price > marketPrice)
@@ -508,22 +508,22 @@ public:
       double priceLine = 0;
       // draw lines
       int lineCnt    = 0;
-      int maxTouches = 0;  
-      int maxBars    = 0;  
+      int maxTouches = 0;
+      int maxBars    = 0;
        
       for (int i=0; i < _maxLine;++i)
-      {  
+      {
           maxTouches = MathMax(maxTouches, _lines[i].Touches);
           maxBars    = MathMax(maxBars, MathAbs(_lines[i].EndBar - _lines[i].StartBar));
       }
       
      
-         double marketPrice = MarketInfo(_symbol, MODE_BID); 
+         double marketPrice = MarketInfo(_symbol, MODE_BID);
          for (int i=0; i < _maxLine; ++i)
          {
             if ( _lines[i].Price > marketPrice)
             {
-               if (i+1 < _maxLine) { 
+               if (i+1 < _maxLine) {
                    priceLine = _lines[i+1].Price;
                   }
                break;
@@ -543,18 +543,18 @@ public:
       double priceLine = 0;
       // draw lines
       int lineCnt    = 0;
-      int maxTouches = 0;  
-      int maxBars    = 0;  
+      int maxTouches = 0;
+      int maxBars    = 0;
        
       for (int i=0; i < _maxLine;++i)
-      {  
+      {
           maxTouches = MathMax(maxTouches, _lines[i].Touches);
           maxBars    = MathMax(maxBars, MathAbs(_lines[i].EndBar - _lines[i].StartBar));
       }
       
       if (!showAllSRLines)
       {
-         double marketPrice = MarketInfo(_symbol, MODE_BID); 
+         double marketPrice = MarketInfo(_symbol, MODE_BID);
          for (int i=0; i < _maxLine; ++i)
          {
             if ( _lines[i].Price > marketPrice)
@@ -575,17 +575,17 @@ public:
        double priceLine = 0;
       // draw lines
       int lineCnt    = 0;
-      int maxTouches = 0;  
-      int maxBars    = 0;  
+      int maxTouches = 0;
+      int maxBars    = 0;
        
       for (int i=0; i < _maxLine;++i)
-      {  
+      {
           maxTouches = MathMax(maxTouches, _lines[i].Touches);
           maxBars    = MathMax(maxBars, MathAbs(_lines[i].EndBar - _lines[i].StartBar));
       }
       
  
-         double marketPrice = MarketInfo(_symbol, MODE_BID); 
+         double marketPrice = MarketInfo(_symbol, MODE_BID);
          for (int i=0; i < _maxLine; ++i)
          {
             if ( _lines[i].Price > marketPrice)
@@ -605,17 +605,17 @@ public:
       double priceLine = 0;
       // draw lines
       int lineCnt    = 0;
-      int maxTouches = 0;  
-      int maxBars    = 0;  
+      int maxTouches = 0;
+      int maxBars    = 0;
        
       for (int i=0; i < _maxLine;++i)
-      {  
+      {
           maxTouches = MathMax(maxTouches, _lines[i].Touches);
           maxBars    = MathMax(maxBars, MathAbs(_lines[i].EndBar - _lines[i].StartBar));
       }
       
 
-         double marketPrice = MarketInfo(_symbol, MODE_BID); 
+         double marketPrice = MarketInfo(_symbol, MODE_BID);
          for (int i=0; i < _maxLine; ++i)
          {
             if ( _lines[i].Price > marketPrice)
@@ -639,23 +639,23 @@ public:
       double priceLine = 0;
       // draw lines
       int lineCnt    = 0;
-      int maxTouches = 0;  
-      int maxBars    = 0;  
+      int maxTouches = 0;
+      int maxBars    = 0;
        
       for (int i=0; i < _maxLine;++i)
-      {  
+      {
           maxTouches = MathMax(maxTouches, _lines[i].Touches);
           maxBars    = MathMax(maxBars, MathAbs(_lines[i].EndBar - _lines[i].StartBar));
       }
       
       if (!showAllSRLines)
       {
-         double marketPrice = MarketInfo(_symbol, MODE_BID); 
+         double marketPrice = MarketInfo(_symbol, MODE_BID);
          for (int i=0; i < _maxLine; ++i)
          {
             if ( _lines[i].Price > marketPrice)
             {
-               if (i+1 < _maxLine) { 
+               if (i+1 < _maxLine) {
                    priceLine = getPriceLine2(lineCnt, _lines[i+1], maxTouches, maxBars, key, colorText,colors,  showAgeLabels,  showLastTouch);
                   }
                break;
@@ -675,18 +675,18 @@ public:
       double priceLine = 0;
       // draw lines
       int lineCnt    = 0;
-      int maxTouches = 0;  
-      int maxBars    = 0;  
+      int maxTouches = 0;
+      int maxBars    = 0;
        
       for (int i=0; i < _maxLine;++i)
-      {  
+      {
           maxTouches = MathMax(maxTouches, _lines[i].Touches);
           maxBars    = MathMax(maxBars, MathAbs(_lines[i].EndBar - _lines[i].StartBar));
       }
       
       if (!showAllSRLines)
       {
-         double marketPrice = MarketInfo(_symbol, MODE_BID); 
+         double marketPrice = MarketInfo(_symbol, MODE_BID);
          for (int i=0; i < _maxLine; ++i)
          {
             if ( _lines[i].Price > marketPrice)
@@ -709,17 +709,17 @@ public:
     color        Colors[]     = {Red,Red, Red,Red};
       double priceLine = 0;
       int lineCnt    = 0;
-      int maxTouches = 0;  
-      int maxBars    = 0;  
+      int maxTouches = 0;
+      int maxBars    = 0;
        
       for (int i=0; i < _maxLine;++i)
-      {  
+      {
           maxTouches = MathMax(maxTouches, _lines[i].Touches);
           maxBars    = MathMax(maxBars, MathAbs(_lines[i].EndBar - _lines[i].StartBar));
       }
       
      
-         double marketPrice = MarketInfo(_symbol, MODE_BID); 
+         double marketPrice = MarketInfo(_symbol, MODE_BID);
          for (int i=0; i < _maxLine; ++i)
          {
             if ( _lines[i].Price > marketPrice)
@@ -741,18 +741,18 @@ public:
       
       // draw lines
       int lineCnt    = 0;
-      int maxTouches = 0;  
-      int maxBars    = 0;  
+      int maxTouches = 0;
+      int maxBars    = 0;
        
       for (int i=0; i < _maxLine;++i)
-      {  
+      {
           maxTouches = MathMax(maxTouches, _lines[i].Touches);
           maxBars    = MathMax(maxBars, MathAbs(_lines[i].EndBar - _lines[i].StartBar));
       }
       
       if (!showAllSRLines)
       {
-         double marketPrice = MarketInfo(_symbol, MODE_BID); 
+         double marketPrice = MarketInfo(_symbol, MODE_BID);
          for (int i=0; i < _maxLine; ++i)
          {
             if ( _lines[i].Price > marketPrice)
@@ -772,13 +772,13 @@ public:
              DrawLine(lineCnt, _lines[i], maxTouches, maxBars, key, colorText,colors,  showAgeLabels,  showLastTouch);
          }
       }
-   }  
+   }
    
    //+------------------------------------------------------------------+
    void ClearAll(string key="")
-   { 
+   {
       bool deleted = false;
-      do 
+      do
       {
          deleted = false;
          for (int i = 0; i < ObjectsTotal();++i)
@@ -796,9 +796,9 @@ public:
    
    //+------------------------------------------------------------------+
    void Calculate(bool forceRefresh = false)
-   {  
+   {
       int day = TimeDayOfYear(TimeCurrent());
-      if (day != _previousDay || forceRefresh) 
+      if (day != _previousDay || forceRefresh)
       {
          for (int i=0; i < _maxLine; ++i)
          {
@@ -867,3 +867,4 @@ public:
       return false;
    }
 };
+
