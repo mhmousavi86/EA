@@ -167,11 +167,11 @@ color        Colors[]     = {Red,Red, Red,Red};
 
 
 void setMhTemp() {
-   initSuportResistanceZones();
+  // initSuportResistanceZones();
    FastFractals();
    FindZones();
    DrawZones();
-   CalculateSR(true);
+   //CalculateSR(true);
 long handle=ChartID();
 
    if(handle>0)
